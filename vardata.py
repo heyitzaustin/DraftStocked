@@ -1,18 +1,35 @@
+#Player object
+class Player:
+	def __init__(self,search,nickname,fullname):
+		self.search = search
+		self.nickname = nickname
+		self.fullname = fullname
+
+#Comment object
+class Comment:
+	def __init__(self,score,body,permalink,date_posted):
+		self.score = score
+		self.body = body
+		self.permalink = permalink
+		self.date_posted = date_posted
+
+
 #Player Database
-Player_Okafor = ('okafor','okafor','Jahlil Okafor')
-Player_Towns = ('towns','towns','Karl Anthony-Towns')
-Player_Winslow = ('winslow','winslow','Justice Winslow')
-Player_Mudiay = ('Mudiay', 'mudiay', 'Emmanuel Mudiay')
-Player_Russell = ("D'Angelo",'russell',"D'Angelo Russell")
-Player_Porzingis = ('Porzingis','porzingis','Kristaps Porzingis')
-Player_WCS = ('Willie','wcs','Willie Cauley-Stein')
-Player_Hezonja = ('Hezonja','hezonja','Mario Hezonja')
-Player_Stanley = ('Stanley Johnson','johnson','Stanley Johnson')
+Okafor = Player('okafor','okafor','Jahlil Okafor')
+Towns = Player('towns','towns','Karl Anthony-Towns')
+Winslow = Player('winslow','winslow','Justice Winslow')
+Mudiay = Player('Mudiay', 'mudiay', 'Emmanuel Mudiay')
+Russell = Player("D'Angelo",'russell',"D'Angelo Russell")
+Porzingis = Player('Porzingis','porzingis','Kristaps Porzingis')
+WCS = Player('Willie','wcs','Willie Cauley-Stein')
+Hezonja = Player('Hezonja','hezonja','Mario Hezonja')
+Stanley = Player('Stanley Johnson','johnson','Stanley Johnson')
 #Variables are tuples of 3: (A,B,C) where:
 #A = reddit search term. something distinguishable
 #B = nickname or shorthand, what he is usually called
 #C = Full name 
 
+PlayerList = [Okafor,Towns,Winslow,Mudiay,Russell,Porzingis,WCS,Hezonja,Stanley]
 
 #Time parameters for API
 year = 'year'

@@ -6,15 +6,17 @@ import time
 from vardata import *
 
 
-player = Player_Russell
+player = Mudiay
 #What player are we searching for?
 timeFrame = month
 #How far back are we looking?
 
 r = praw.Reddit('Comment Scraper for DraftStocked')
 multi_reddits = r.get_subreddit('nba+NBA_Draft')
-submissions = multi_reddits.search(player[0], sort='relevance',period=timeFrame)
 
+submissions = multi_reddits.search(player.search, sort='relevance',period=timeFrame)
+
+print("\nDraft Stock report on "+player.fullname+"\n")
 comment_list = []
 for x in submissions:
 	print(str(x))
@@ -23,16 +25,17 @@ for x in submissions:
 	submission.replace_more_comments(limit=16, threshold=10)
 	flat_comments = praw.helpers.flatten_tree(submission.comments)
 	for comment in flat_comments:
-		if player[1] in (comment.body).lower() and comment.id not in comment_list:
+		if player.nickname in (comment.body).lower() and comment.id not in comment_list:
 			#print(comment.body)
 			#print('\n')
 			#Debug stuff
-			comment_list.append((comment.score,comment.body,comment.permalink,comment.created_utc))
+			comment_list.append(Comment(comment.score,comment.body,comment.permalink,comment.created_utc))
+		
 
 
 print("\nAGGREGATED COMMENTS:\n")
 
-comment_list.sort(key=lambda x: x[0], reverse=True)
+comment_list.sort(key=lambda x: x.score, reverse=True)
 
 playerStock = 0
 #Initialize player stock
@@ -43,8 +46,10 @@ timeFilter = secondsMonth
 #View comments from the past ____ 
 
 currentTime = int(time.time())
+#Current time for comparison
+
 #tuple is of comment score, comment body, comment permalink, comment date posted
-for sc,bd,pm,dt in comment_list:
+for comment in comment_list:
 	#Post request to semantic analysis API. This is how we're determining whether a 
 	#comment is helping or detrimental to the players stock.
 	response = requests.post("https://twinword-sentiment-analysis.p.mashape.com/analyze/",
@@ -54,23 +59,23 @@ for sc,bd,pm,dt in comment_list:
     "Accept": "application/json"
   	},
   	params={
-    "text": bd
+    "text": comment.body
   	}
 	)
 	playerStock+=response.json()["score"]
 	#print(response.json())
 
 	if(displayAmount>=0):
-		if(currentTime-dt < timeFilter and sc > 0):
+		if(currentTime-comment.date_posted < timeFilter and comment.score > 0):
 			print("COMMENT #"+str(25-displayAmount))
-			print('Context: '+pm)
-			print('Comment Score: '+str(sc))
-			print("Date Posted:"+datetime.datetime.fromtimestamp(int(dt)).strftime('%Y-%m-%d %H:%M:%S'))
-			print(bd+'\n')
+			print('Context: '+comment.permalink)
+			print('Comment Score: '+str(comment.score))
+			print("Date Posted:"+datetime.datetime.fromtimestamp(int(comment.date_posted)).strftime('%Y-%m-%d %H:%M:%S'))
+			print(comment.body+'\n')
 			displayAmount+= -1
 	else:
 		print('.', end="", flush=True)
 
-print("\nPlayer stock of "+player[2]+" is %.2f" % round(playerStock,2))
+print("\nPlayer stock of "+player.fullname+" is %.2f" % round(playerStock,2))
 
 
