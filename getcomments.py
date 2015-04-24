@@ -26,7 +26,8 @@ def ParseComments(player):
 		print(str(x))
 		print(x.id)
 		submission = r.get_submission(submission_id=x.id)
-		submission.replace_more_comments(limit=16, threshold=10)
+		submission.replace_more_comments(limit=0, threshold=0)
+		# ^ This is our bottleneck. See if we can make it faster?
 		flat_comments = praw.helpers.flatten_tree(submission.comments)
 		for comment in flat_comments:
 			if player.nickname in (comment.body).lower() and comment.id not in comment_list:
