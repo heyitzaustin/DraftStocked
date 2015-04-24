@@ -1,7 +1,8 @@
 import sqlite3 as lite
 import sys
+from vardata import *
 
-con = lite.connect('redditdata.db')
+con = lite.connect(dbname)
 
 with con:
 

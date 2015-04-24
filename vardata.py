@@ -14,6 +14,9 @@ class Comment:
 		self.date_posted = date_posted
 
 
+dbname = '/root/DraftStocked/redditdata.db'
+#dbname = 'redditdata.db'
+
 #Player Database
 Okafor = Player('okafor','okafor','Jahlil Okafor')
 Towns = Player('towns','towns','Karl Anthony-Towns')
