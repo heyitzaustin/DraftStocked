@@ -8,6 +8,9 @@ import sys
 
 from vardata import *
 
+debug = 0;
+#Set to 1 for print statements
+
 con = lite.connect('redditdata.db')
 
 def ParseComments(player):
@@ -21,13 +24,15 @@ def ParseComments(player):
 	submissions = multi_reddits.search(player.search, sort='relevance',period=timeFrame)
 	#getting the submissions!
 	
-	print("\nDraft Stock report on "+player.fullname+"\n")
+	if debug:
+		print("\nDraft Stock report on "+player.fullname+"\n")
 	comment_list = []
 	
 	for x in submissions:
-		print(str(x))
-		print(x.id)
-		#Debug stuff
+		if debug:
+			print(str(x))
+			print(x.id)
+			#Debug stuff
 		submission = r.get_submission(submission_id=x.id)
 		submission.replace_more_comments(limit=0, threshold=0)
 		# ^ we don't really care about lower level/reply comments. Set limit to 0 so fewer API calls
@@ -40,7 +45,8 @@ def ParseComments(player):
 
 
 	#We got the comments! Now let's sort them
-	print("\nAGGREGATED COMMENTS:\n")
+	if debug:
+		print("\nAGGREGATED COMMENTS:\n")
 
 	comment_list.sort(key=lambda x: x.score, reverse=True)
 	#sorting my score/Karma
@@ -71,17 +77,18 @@ def ParseComments(player):
 		#increment the player's stock by the semantic analysis score
 		
 		#Just debug stuff. For terminal use so it doesn't get overcrowded
-		if(displayAmount>=0):
-			if(currentTime-comment.date_posted < timeFilter and comment.score > 0):
-				print("COMMENT #"+str(25-displayAmount))
-				print('Context: '+comment.permalink)
-				print('Comment Score: '+str(comment.score))
-				print("Date Posted:"+datetime.datetime.fromtimestamp(int(comment.date_posted)).strftime('%Y-%m-%d %H:%M:%S'))
-				print(comment.body+'\n')
-				displayAmount+= -1
-		else:
-			print('.', end="", flush=True)
-			#Let's us know the script is still running
+		if debug:
+			if(displayAmount>=0):
+				if(currentTime-comment.date_posted < timeFilter and comment.score > 0):
+					print("COMMENT #"+str(25-displayAmount))
+					print('Context: '+comment.permalink)
+					print('Comment Score: '+str(comment.score))
+					print("Date Posted:"+datetime.datetime.fromtimestamp(int(comment.date_posted)).strftime('%Y-%m-%d %H:%M:%S'))
+					print(comment.body+'\n')
+					displayAmount+= -1
+			else:
+				print('.', end="", flush=True)
+				#Let's us know the script is still running
 
 		with con:
 			params = (player.fullname,comment.score, comment.body, comment.permalink, comment.date_posted)
