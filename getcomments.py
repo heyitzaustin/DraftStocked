@@ -11,7 +11,7 @@ from vardata import *
 debug = 0;
 #Set to 1 for print statements
 
-con = lite.connect('redditdata.db')
+con = lite.connect(dbname)
 
 def ParseComments(player):
 
@@ -98,10 +98,15 @@ def ParseComments(player):
 
 	with con:
 		cur = con.cursor()
-		cur.execute("UPDATE Players SET Stock=? WHERE Fullname=?", (round(playerStock,2), player.fullname)) 
+		cur.execute("SELECT Stock FROM Players WHERE Fullname=?",(player.fullname,))
+		row = cur.fetchone()
+		cur.execute("UPDATE Players SET Change =? WHERE Fullname =?",(round( playerStock - row[0] , 2 ), player.fullname))
+		#Get difference in stocks to measure change
+		cur.execute("UPDATE Players SET Stock=? WHERE Fullname=?", (round(playerStock,2), player.fullname))
 		#update our player info to have new stock
 		
 	print("\nPlayer stock of "+player.fullname+" is %.2f" % round(playerStock,2))
+
 
 def getComments(player):
 	with con:

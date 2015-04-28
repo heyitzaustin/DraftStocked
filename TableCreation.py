@@ -6,7 +6,7 @@ con = lite.connect(dbname)
 
 with con:
 	cur = con.cursor()
-	cur.execute("CREATE TABLE Players(Search TEXT, Nickname TEXT, Fullname TEXT, Stock INT)")
+	cur.execute("CREATE TABLE Players(Search TEXT, Nickname TEXT, Fullname TEXT, Stock INT, Change INT)")
 	cur.execute("CREATE TABLE Comments(Player TEXT, Score INT, Body TEXT, Permalink TEXT, Dateposted INT)")
 
 
@@ -17,6 +17,6 @@ with con:
 	#C = Full name 
 	for player in PlayerList:
 		params = (player.search,player.nickname,player.fullname)
-		cur.execute("INSERT INTO Players VALUES(?,?,?,0)",params)
+		cur.execute("INSERT INTO Players VALUES(?,?,?,0,0)",params)
 
 
