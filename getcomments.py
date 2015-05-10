@@ -91,7 +91,7 @@ def ParseComments(player):
 				#Let's us know the script is still running
 
 		with con:
-			params = (player.fullname,comment.score, comment.body, comment.permalink, comment.date_posted)
+			params = (player.nickname,comment.score, comment.body, comment.permalink, comment.date_posted)
 			cur = con.cursor()
 			cur.execute("INSERT INTO Comments VALUES(?,?,?,?,?)",params)
 			#Add to our local SQL database!
@@ -112,7 +112,7 @@ def getComments(player):
 	with con:
 
 		cur = con.cursor()
-		cur.execute("SELECT Score,Body,Permalink,Dateposted FROM Comments WHERE Player=?",(player.fullname,))
+		cur.execute("SELECT Score,Body,Permalink,Dateposted FROM Comments WHERE Player=?",(player.nickname,))
 		rows = cur.fetchall()
 
 		for row in rows:
