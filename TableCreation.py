@@ -7,7 +7,7 @@ con = lite.connect(dbname)
 with con:
 	cur = con.cursor()
 	cur.execute("CREATE TABLE Players(Search TEXT, Nickname TEXT, Fullname TEXT, Stock INT, Change INT)")
-	cur.execute("CREATE TABLE Comments(Player TEXT, Score INT, Body TEXT, Permalink TEXT, Dateposted INT)")
+	cur.execute("CREATE TABLE Comments(Player TEXT, Score INT, Body TEXT, Permalink TEXT, Dateposted INT, Semantic INT)")
 
 
 	#Insert into database what players you want to know about!

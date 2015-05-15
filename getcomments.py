@@ -13,15 +13,15 @@ debug = 0;
 
 con = lite.connect(dbname)
 
-def ParseComments(player):
+def ParseComments(player,timeFrame):
 
-	timeFrame = month
 	#How far back are we looking?
 
 	r = praw.Reddit('Comment Scraper for DraftStocked by u/heyitzaustin')
 	multi_reddits = r.get_subreddit('nba+NBA_Draft')
 	#looking at these two subreddits for now so we're sure to get relevant content
-	submissions = multi_reddits.search(player.search, sort='relevance',period=timeFrame)
+	searchterm = player.search
+	submissions = multi_reddits.search(searchterm, sort='relevance',period=timeFrame)
 	#getting the submissions!
 	
 	if debug:
@@ -50,6 +50,7 @@ def ParseComments(player):
 
 	comment_list.sort(key=lambda x: x.score, reverse=True)
 	#sorting my score/Karma
+	#playerStock = 0
 	playerStock = 0
 	#Initialize player stock
 	displayAmount = 25
@@ -91,21 +92,23 @@ def ParseComments(player):
 				#Let's us know the script is still running
 
 		with con:
-			params = (player.nickname,comment.score, comment.body, comment.permalink, comment.date_posted)
+			params = (player.nickname,comment.score, comment.body, comment.permalink, comment.date_posted,response.json()["score"])
 			cur = con.cursor()
-			cur.execute("INSERT INTO Comments VALUES(?,?,?,?,?)",params)
+			cur.execute("INSERT INTO Comments VALUES(?,?,?,?,?,?)",params)
 			#Add to our local SQL database!
 
 	with con:
 		cur = con.cursor()
 		cur.execute("SELECT Stock FROM Players WHERE Fullname=?",(player.fullname,))
 		row = cur.fetchone()
-		cur.execute("UPDATE Players SET Change =? WHERE Fullname =?",(round( playerStock - row[0] , 2 ), player.fullname))
+		#cur.execute("UPDATE Players SET Change =? WHERE Fullname =?",(round( playerStock, 2 ), player.fullname))
+		cur.execute("UPDATE Players SET Change =? WHERE Fullname =?",(round(playerStock, 2 ), player.fullname))
 		#Get difference in stocks to measure change
-		cur.execute("UPDATE Players SET Stock=? WHERE Fullname=?", (round(playerStock,2), player.fullname))
+		#cur.execute("UPDATE Players SET Stock=? WHERE Fullname=?", (round(row[0]+playerStock,2), player.fullname))
+		cur.execute("UPDATE Players SET Stock=? WHERE Fullname=?", (round(row[0] + playerStock,2), player.fullname))
 		#update our player info to have new stock
 		
-	print("\nPlayer stock of "+player.fullname+" is %.2f" % round(playerStock,2))
+	print("\nPlayer stock of "+player.fullname+" is %.2f" % round(row[0] + playerStock,2))
 
 
 def getComments(player):
@@ -118,5 +121,6 @@ def getComments(player):
 		for row in rows:
 			print("Context: "+row[2])
 			print("Score: "+str(row[0]))
-			print("Posted: "+str(row[3]))
+			t = datetime.datetime.fromtimestamp(row[3]).strftime('%m-%d-%Y')
+			print("Posted: "+t)
 			print(row[1]+"\n")
