@@ -13,6 +13,7 @@ with con:
 	rows = cur.fetchall()
 
 	for row in rows:
+		print("Comment about: "+row[0])
 		print("Score: "+str(row[1]))
 		t = datetime.datetime.fromtimestamp(row[4]).strftime('%m-%d-%Y')
 		print("Date Posted: "+t)

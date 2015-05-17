@@ -99,10 +99,10 @@ def ParseComments(player,timeFrame):
 
 	with con:
 		cur = con.cursor()
-		cur.execute("SELECT Stock FROM Players WHERE Fullname=?",(player.fullname,))
+		cur.execute("SELECT Stock,Change FROM Players WHERE Fullname=?",(player.fullname,))
 		row = cur.fetchone()
 		#cur.execute("UPDATE Players SET Change =? WHERE Fullname =?",(round( playerStock, 2 ), player.fullname))
-		cur.execute("UPDATE Players SET Change =Change+? WHERE Fullname =?",(round(playerStock, 2 ), player.fullname))
+		cur.execute("UPDATE Players SET Change =? WHERE Fullname =?",(round(row[1]+ playerStock, 2 ), player.fullname))
 		#Get difference in stocks to measure change
 		#cur.execute("UPDATE Players SET Stock=? WHERE Fullname=?", (round(row[0]+playerStock,2), player.fullname))
 		cur.execute("UPDATE Players SET Stock=? WHERE Fullname=?", (round(row[0] + playerStock,2), player.fullname))
