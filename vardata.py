@@ -27,12 +27,14 @@ Porzingis = Player('Porzingis','porzingis','Kristaps Porzingis')
 WCS = Player('Willie','wcs','Willie Cauley-Stein')
 Hezonja = Player('Hezonja','hezonja','Mario Hezonja')
 Stanley = Player('Stanley Johnson','johnson','Stanley Johnson')
+Kaminsky = Player('Kaminsky','kaminsky','Frank Kaminsky')
+
 #Variables are tuples of 3: (A,B,C) where:
 #A = reddit search term. something distinguishable
 #B = nickname or shorthand, what he is usually called
 #C = Full name 
 
-PlayerList = [Okafor,Towns,Winslow,Mudiay,Russell,Porzingis,WCS,Hezonja,Stanley]
+PlayerList = [Okafor,Towns,Winslow,Mudiay,Russell,Porzingis,WCS,Hezonja,Stanley,Kaminsky]
 
 #Time parameters for API
 year = 'year'
