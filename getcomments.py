@@ -20,7 +20,7 @@ def ParseComments(player,timeFrame):
 	r = praw.Reddit('Comment Scraper for DraftStocked by u/heyitzaustin')
 	multi_reddits = r.get_subreddit('nba+NBA_Draft')
 	#looking at these two subreddits for now so we're sure to get relevant content
-	searchterm = player.search
+	searchterm = 'Draft OR '+player.search
 	submissions = multi_reddits.search(searchterm, sort='relevance',period=timeFrame)
 	#getting the submissions!
 	
@@ -74,7 +74,14 @@ def ParseComments(player,timeFrame):
     	"text": comment.body
   		}
 		)
-		playerStock+=response.json()["score"]
+		print(comment.body)
+		print('\n'+response.text)
+		try:
+			playerStock+=response.json()["score"]
+			curr_score = response.json()["score"]
+		except ValueError:
+			print("EAFP lol")
+			curr_score = 0
 		#increment the player's stock by the semantic analysis score
 		
 		#Just debug stuff. For terminal use so it doesn't get overcrowded
@@ -92,7 +99,7 @@ def ParseComments(player,timeFrame):
 				#Let's us know the script is still running
 
 		with con:
-			params = (player.nickname,comment.score, comment.body, comment.permalink, comment.date_posted,response.json()["score"])
+			params = (player.nickname,comment.score, comment.body, comment.permalink, comment.date_posted,curr_score)
 			cur = con.cursor()
 			cur.execute("INSERT INTO Comments VALUES(?,?,?,?,?,?)",params)
 			#Add to our local SQL database!
