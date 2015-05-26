@@ -1,6 +1,6 @@
 # DraftStocked
 
-http://192.241.216.121/
+http://draftstocked.com/
 
 List of important files in this repository:
 
